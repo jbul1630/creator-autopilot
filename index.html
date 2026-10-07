@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Creator Autopilot</title>
+  <meta name="description" content="Creator Autopilot helps creators generate, edit, and publish original short-form videos with explicit user control.">
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #121a2f;
+      --panel-2: #18223d;
+      --text: #f5f7ff;
+      --muted: #aeb8d0;
+      --accent: #7c8cff;
+      --accent-2: #a78bfa;
+      --border: rgba(255,255,255,.10);
+      --max: 1080px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(124,140,255,.18), transparent 35%),
+        radial-gradient(circle at 85% 15%, rgba(167,139,250,.13), transparent 30%),
+        var(--bg);
+      line-height: 1.6;
+    }
+    a { color: inherit; }
+    .wrap { width: min(calc(100% - 40px), var(--max)); margin: auto; }
+    header {
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(14px);
+      background: rgba(11,16,32,.78);
+    }
+    nav {
+      min-height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .brand {
+      font-weight: 800;
+      letter-spacing: -.03em;
+      font-size: 1.1rem;
+      text-decoration: none;
+    }
+    nav .links { display: flex; gap: 22px; flex-wrap: wrap; }
+    nav .links a { color: var(--muted); text-decoration: none; font-size: .94rem; }
+    nav .links a:hover { color: var(--text); }
+    .hero { padding: 100px 0 80px; }
+    .eyebrow {
+      display: inline-block;
+      padding: 7px 12px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255,255,255,.04);
+      color: #d8ddff;
+      font-size: .86rem;
+      font-weight: 700;
+    }
+    h1 {
+      max-width: 850px;
+      margin: 22px 0 18px;
+      font-size: clamp(2.7rem, 7vw, 5.6rem);
+      line-height: .98;
+      letter-spacing: -.055em;
+    }
+    .hero p {
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 1.15rem;
+      margin: 0 0 30px;
+    }
+    .actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .button {
+      display: inline-block;
+      padding: 12px 18px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 750;
+      border: 1px solid var(--border);
+    }
+    .button.primary {
+      background: var(--text);
+      color: var(--bg);
+      border-color: var(--text);
+    }
+    .button.secondary { background: rgba(255,255,255,.04); }
+    section { padding: 72px 0; }
+    .section-title { font-size: 2rem; letter-spacing: -.035em; margin: 0 0 10px; }
+    .section-intro { color: var(--muted); max-width: 720px; margin: 0 0 34px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+    .card {
+      background: linear-gradient(180deg, rgba(24,34,61,.85), rgba(18,26,47,.85));
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 25px;
+    }
+    .card h3 { margin: 0 0 8px; font-size: 1.15rem; }
+    .card p { margin: 0; color: var(--muted); }
+    .steps { counter-reset: step; }
+    .step { position: relative; padding-left: 58px; margin: 0 0 26px; }
+    .step::before {
+      counter-increment: step;
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--panel-2);
+      border: 1px solid var(--border);
+      font-weight: 800;
+      color: #dce0ff;
+    }
+    .step h3 { margin: 0 0 4px; }
+    .step p { margin: 0; color: var(--muted); }
+    .notice {
+      border: 1px solid rgba(124,140,255,.30);
+      background: rgba(124,140,255,.08);
+      border-radius: 18px;
+      padding: 25px;
+    }
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 0 45px;
+      color: var(--muted);
+      font-size: .92rem;
+    }
+    footer .footer-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    footer a { color: var(--text); text-decoration: none; }
+    @media (max-width: 700px) {
+      .wrap { width: min(calc(100% - 28px), var(--max)); }
+      nav { align-items: flex-start; padding: 16px 0; flex-direction: column; }
+      .hero { padding: 70px 0 55px; }
+      .grid { grid-template-columns: 1fr; }
+      section { padding: 55px 0; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <nav>
+        <a class="brand" href="./">Creator Autopilot</a>
+        <div class="links">
+          <a href="#features">Features</a>
+          <a href="#tiktok">TikTok integration</a>
+          <a href="#security">Security</a>
+          <a href="terms.html">Terms</a>
+          <a href="privacy.html">Privacy</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <span class="eyebrow">Creator-focused short-form video workflow</span>
+        <h1>Create. Review. Publish.</h1>
+        <p>
+          Creator Autopilot helps creators generate ideas, develop scripts,
+          render original short-form videos, and transfer their content to
+          their own social accounts with explicit user control.
+        </p>
+        <div class="actions">
+          <a class="button primary" href="#tiktok">How the TikTok integration works</a>
+          <a class="button secondary" href="mailto:julienvincent120@gmail.com">Contact</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="features">
+      <div class="wrap">
+        <h2 class="section-title">What Creator Autopilot does</h2>
+        <p class="section-intro">
+          The application provides a workflow for creating original short-form
+          content while keeping the creator in control of review and publishing.
+        </p>
+        <div class="grid">
+          <article class="card">
+            <h3>Content ideas</h3>
+            <p>Generate and organize short-form content ideas for the creator's workflow.</p>
+          </article>
+          <article class="card">
+            <h3>Script generation</h3>
+            <p>Turn selected ideas into structured scripts ready for review and production.</p>
+          </article>
+          <article class="card">
+            <h3>Video creation</h3>
+            <p>Render short-form videos from approved scripts and production assets.</p>
+          </article>
+          <article class="card">
+            <h3>Creator-controlled publishing</h3>
+            <p>Connect an account securely and transfer content only after explicit user authorization.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="tiktok">
+      <div class="wrap">
+        <h2 class="section-title">TikTok integration</h2>
+        <p class="section-intro">
+          Creator Autopilot uses TikTok's official authorization and content
+          publishing interfaces. The creator remains responsible for the final
+          content and publishing decision.
+        </p>
+        <div class="steps">
+          <div class="step">
+            <h3>Connect your TikTok account</h3>
+            <p>
+              The user is redirected to TikTok to authenticate and explicitly
+              authorize the permissions requested by Creator Autopilot.
+            </p>
+          </div>
+          <div class="step">
+            <h3>Review the content</h3>
+            <p>
+              The creator reviews the generated video before any transfer or
+              publishing action takes place.
+            </p>
+          </div>
+          <div class="step">
+            <h3>Transfer or publish</h3>
+            <p>
+              Depending on the selected workflow and available permissions,
+              the video can be uploaded to the creator's TikTok inbox or sent
+              for publishing after explicit confirmation.
+            </p>
+          </div>
+          <div class="step">
+            <h3>Stay in control</h3>
+            <p>
+              Creator Autopilot does not authorize access to a TikTok account
+              without the user's consent and does not sell TikTok user data.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="security">
+      <div class="wrap">
+        <h2 class="section-title">Privacy and security</h2>
+        <p class="section-intro">
+          Creator Autopilot is designed around explicit authorization and
+          limited use of account data required for the integration.
+        </p>
+        <div class="notice">
+          <strong>Data and account control</strong>
+          <p>
+            TikTok authorization data is used only to provide the requested
+            integration. Access credentials are stored securely by the
+            application and are not intentionally exposed to other users.
+            Users can stop using the service and revoke access through the
+            available account controls.
+          </p>
+          <p>
+            For complete details, please read the
+            <a href="privacy.html">Privacy Policy</a> and
+            <a href="terms.html">Terms of Use</a>.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2 class="section-title">Built for creators</h2>
+        <p class="section-intro">
+          Creator Autopilot is intended for creators who want a streamlined
+          workflow for producing original short-form content while retaining
+          control over their accounts and publishing decisions.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-row">
+      <div>
+        <strong>Creator Autopilot</strong><br>
+        Creator-focused short-form video workflow.
+      </div>
+      <div>
+        <a href="terms.html">Terms of Use</a>
+        &nbsp;·&nbsp;
+        <a href="privacy.html">Privacy Policy</a>
+        &nbsp;·&nbsp;
+        <a href="mailto:julienvincent120@gmail.com">Contact</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
